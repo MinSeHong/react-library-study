@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '@/public/store/store';
 import type { AppDispatch } from '@/public/store/store';
-import { increment, decrement } from '@/public/features/counter/counterSlice';
+import { increment, decrement,incrementByAmount } from '@/public/features/counter/counterSlice';
 
 
 export default function Counter() {
@@ -14,6 +14,7 @@ export default function Counter() {
       <h1>Count: {count}</h1>
       <button onClick={() => dispatch(decrement())}>-</button>
       <button onClick={() => dispatch(increment())}>+</button>
+      <button onClick={() => dispatch(incrementByAmount(7))}>+</button>
     </div>
   );
 }
