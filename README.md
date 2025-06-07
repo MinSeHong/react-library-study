@@ -5,13 +5,20 @@
 </p>
 
 <p align='center'>
-React을 이용한 여러가지 library 예제들 입니다.
+React을 이용한 여러가지 library 공부 자료입니다.<br/>
+Typescript를 사용했으며 state 관리와 애니메이션 제작에 관련된 내용입니다.
 </p>
 
 <br/>
 
 ## 주요 예제들
->Three js 사용방법<br/>
+>React-query<br/>
+>React-redux<br/>
+>Matter js<br/>
+>>Matter js 초기 세팅 방법<br/>
+>>Mouse Constraint<br/>
+>>coposites<br/>
+>Three js<br/>
 >><a href="https://www.notion.so/minsehong/Three-JS-20a4339956d0808fabe0fffbfc39fb7d?source=copy_link">Three js 초기 세팅 방법</a><br/>
 >><a href="https://www.notion.so/minsehong/Three-JS-Mesh-20a4339956d080c6a5efc8dbdd387f58?source=copy_link">Mesh 설명</a><br/>
 *****
