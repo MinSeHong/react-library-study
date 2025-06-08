@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Matter, { Common, Composites, Constraint } from 'matter-js';
+import Matter, {Composites, Constraint } from 'matter-js';
+import { svgPathProperties } from 'svg-path-properties';
 
 
 
-const CompositesChain: React.FC = () => {
+const BodiesFromVertices: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
-
+  
   useEffect(() => {
     const Engine = Matter.Engine;
     const Render = Matter.Render;
@@ -62,9 +63,17 @@ const CompositesChain: React.FC = () => {
         }
     });
 
+
+    const exampleVertices = [
+      { x: 0, y: 0 },
+      { x: 64, y: 0 },
+      { x: 64, y: 64 },
+      { x: 0, y: 64 }
+    ];
+
+
     var stack = Composites.stack(250, 50, 6, 3, 0, 0, function(x:number, y:number) {
-        return Bodies.rectangle(x, y, 50, 50,  {
-            chamfer:{radius:5},
+        return Bodies.fromVertices(x, y, [exampleVertices],  {
             render: {
               strokeStyle: 'black',
               lineWidth:2
@@ -141,6 +150,23 @@ const CompositesChain: React.FC = () => {
       }
     });
 
+
+    //마우스 클릭 이벤트
+    Events.on(mouseConstraint, 'mousedown', (event) => {
+      const mousePosition = event.mouse.position;
+
+      const newBody = Bodies.rectangle(mousePosition.x, mousePosition.y, 40, 40, {
+        render: {
+          strokeStyle: 'black',
+          lineWidth: 2,
+        },
+      });
+
+      Composite.add(world, newBody);
+    });
+
+
+
     Engine.run(engine);
     Render.run(render);
 
@@ -160,4 +186,4 @@ const CompositesChain: React.FC = () => {
   return <div ref={sceneRef} />;
 };
 
-export default CompositesChain;
+export default BodiesFromVertices;
