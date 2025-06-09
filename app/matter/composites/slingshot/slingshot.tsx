@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Matter, { Common, Composites, Constraint } from 'matter-js';
+import Matter, { Body, Common, Composites, Constraint } from 'matter-js';
 
 
 //matter-wrap 사용
@@ -9,7 +9,7 @@ import MatterWrap from 'matter-wrap';
 Matter.use(MatterWrap); // 등록
 
 
-function drawGrid(canvas:HTMLCanvasElement, spacing:number = 50) {
+function drawGrid(canvas:HTMLCanvasElement, spacing:number = 10) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   
@@ -18,8 +18,8 @@ function drawGrid(canvas:HTMLCanvasElement, spacing:number = 50) {
 
   ctx.save();
   ctx.strokeStyle = 'black';
-  ctx.lineWidth = 0.5;
-  ctx.font = '10px Arial';
+  ctx.lineWidth = 0.2;
+  ctx.font = '13px Arial';
   ctx.fillStyle = 'black';
 
   // 세로
@@ -86,35 +86,60 @@ const Slingshot: React.FC = () => {
           lineWidth:2
         }
       }),
-      Bodies.rectangle(200,300,200,50,{
+
+      Bodies.rectangle(850,300,200,20,{
         isStatic:true,
         render:{
           fillStyle:"green",
           strokeStyle:"black",
           lineWidth:2
         }
-      })
-  ]
-
-  Composite.add(world,ground);
-
-
-
-
-    var pyramid = Composites.pyramid(500,500,5,4,0,0,(x:number, y:number)=>{
-      return Bodies.rectangle(x, y, 30, 30, {
-            chamfer: { radius: 5 },
-            frictionAir: 0.01,
+      }),
+      Composites.pyramid(800,240,5,4,0,0,(x:number, y:number)=>{
+      return Bodies.rectangle(x, y, 20, 20, {
+            frictionAir: 0.05,
             render: { 
               strokeStyle: 'black',
               lineWidth:2
             }
         });
+    }),
+    Bodies.rectangle(700,700,250,20,{
+        isStatic:true,
+        render:{
+          fillStyle:"green",
+          strokeStyle:"black",
+          lineWidth:2
+        }
+    }),
+    Composites.pyramid(600,600,10,6,0,0,(x:number, y:number)=>{
+      return Bodies.rectangle(x, y, 20, 20, {
+            frictionAir: 0.05,
+            render: { 
+              strokeStyle: 'black',
+              lineWidth:2
+            }
+        });
+    }),
+  ]
+  Composite.add(world,ground);
+
+  var rock = Bodies.polygon(170, 650, 8, 20, {
+    density:0.004
+  })
+
+  const pointer = {x: 170, y: 650}
+  var elastic = Constraint.create({
+      pointA: pointer, 
+      bodyB: rock, 
+      length: 0.01,
+      damping: 0.01,
+      stiffness: 0.05
     });
+  
+  Composite.add(world,[rock,elastic]);
 
-
-
-    Composite.add(world,[pyramid]);
+  
 
     const mouse = Mouse.create(render.canvas);
     const mouseConstraint = MouseContraint.create(engine,{
@@ -144,6 +169,31 @@ const Slingshot: React.FC = () => {
         body.render.fillStyle = color;
       }
     });
+
+    var flag:boolean = false;
+
+    
+    Events.on(engine, 'afterUpdate', function() {
+      if (flag) return;
+
+      const rockSpeed = Body.getSpeed(rock);
+      if (mouseConstraint.mouse.button === -1 && (rock.position.x > pointer.x) && rockSpeed > 10) {
+        flag = true;
+        if (Body.getSpeed(rock) > 45) {
+            Body.setSpeed(rock, 45);
+        }
+        rock = Bodies.polygon(170, 650, 7, 20,{
+          density:0.004
+        });
+
+        Composite.add(engine.world, rock);
+        elastic.bodyB = rock;
+        setTimeout(()=>{
+          flag=false;
+        },1000);
+      }
+    });
+
 
     const allBodies = Composite.allBodies(world);
     for (let i =0; i < allBodies.length; i++){
