@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from 'react';
 import Matter, { Common, Composites, Constraint } from 'matter-js';
 
 
-
 const CompositesChain: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
 

@@ -41,7 +41,8 @@ const Angular: React.FC = () => {
     });
 
     const group: number = Matter.Body.nextGroup(true);
-
+    
+    /*
     var boxes = Composites.stack(160, 290, 15, 1, 0, 0, function(x:number, y:number) {
         return Bodies.rectangle(x-20, y, 53, 20, {
             collisionFilter: { group: group },
@@ -63,11 +64,12 @@ const Angular: React.FC = () => {
             visible: false
             
         }
-    });
-
+    });*/
+    
     var stack = Composites.stack(250, 50, 6, 3, 0, 0, function(x:number, y:number) {
         return Bodies.rectangle(x, y, 50, 50,  {
             chamfer:{radius:5},
+            frictionAir: Matter.Common.random(0.1,0.3),
             render: {
               strokeStyle: 'black',
               lineWidth:2
@@ -77,7 +79,7 @@ const Angular: React.FC = () => {
 
     
 
-    Composite.add(world, [boxes,stack,
+    Composite.add(world, [stack,
         Bodies.rectangle(30, 490, 220, 380, { 
             isStatic: true, 
             chamfer: { radius: 20 },
@@ -96,6 +98,7 @@ const Angular: React.FC = () => {
               lineWidth:2
             }
         }),
+        /*
         Constraint.create({ 
             pointA: { x: 140, y: 300 }, 
             bodyB: boxes.bodies[0], 
@@ -110,6 +113,7 @@ const Angular: React.FC = () => {
             length: 2,
             stiffness: 0.9
         })
+        */
     ]);
 
     const mouse = Mouse.create(render.canvas);
