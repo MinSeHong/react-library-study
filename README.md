@@ -23,7 +23,9 @@ Typescript를 사용했으며 state 관리와 애니메이션 제작에 관련�
 >Matter js<br/>
 >><a href="https://www.notion.so/minsehong/Matter-JS-20b4339956d080ac93ececf154a93695?source=copy_link">초기 세팅 방법</a><br/>
 >>Mouse Constraint<br/>
->>coposites<br/>
+>>composites<br/>
+>>bodies<br/>
+>>Event<br/>
 
 >Three js<br/>
 >><a href="https://www.notion.so/minsehong/Three-JS-20a4339956d0808fabe0fffbfc39fb7d?source=copy_link">초기 세팅 방법</a><br/>
