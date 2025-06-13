@@ -6,7 +6,7 @@
 
 <p align='center'>
 React을 이용한 library 공부 자료입니다.<br/>
-Typescript를 이용한 React-Query, React-Redux toolkit등의 예시를 만들었습니다.<br/>
+Typescript를 이용한 React-Query, React-Redux toolkit 예시를 만들었습니다.<br/>
 Typescript를 이용한 Matter 사용방법을 만들었습니다.<br/>
 코드 안에 상세한 설명을 넣어, 다른 사람들이 공부할 수 있도록 제작했습니다.<br/>
 초기 프로젝트이기 떄문에 계속 개선할 예정입니다.
