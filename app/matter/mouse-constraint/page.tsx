@@ -1,16 +1,16 @@
 'use client';
+import Header from '@/app/_components/header';
 import dynamic from 'next/dynamic';
-
-const MouseConstraint = dynamic(() => import('./mouseConstraint'), {
-  ssr: false,
-});
+import styles from '@/app/matter/matter.module.scss';
+import MouseConstraint from './mouseConstraint';
 
 
 export default function HomePage() {
   return (
-    <main>
-      <h1>마우스 드래그 기능 추가</h1>
+    <div className={styles.layout}>
+        <Header/>
+      <h1>마우스 드래그 기능</h1>
       <MouseConstraint></MouseConstraint>
-    </main>
+    </div>
   );
 }

@@ -1,16 +1,15 @@
 'use client';
 import dynamic from 'next/dynamic';
-
-const MatterCanvas = dynamic(() => import('./matterCanvas'), {
-  ssr: false,
-});
-
+import Header from '../_components/header';
+import styles from '@/app/matter/matter.module.scss';
+import MatterCanvas from './matterCanvas';
 
 export default function HomePage() {
   return (
-    <main>
-      <h1>Matter.js in Next.js + TypeScript</h1>
-      <MatterCanvas></MatterCanvas>
-    </main>
+    <div className={styles.layout}>
+    <Header/>
+      <h1>TypeScript를 이용한 Matter 생성</h1>
+      <MatterCanvas/>
+    </div>
   );
 }

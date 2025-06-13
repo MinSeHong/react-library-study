@@ -1,0 +1,35 @@
+$breakpoints: (
+  'application-h': 1480px,
+  'application-m': 1300px,
+  'desktop': 1200px,
+  'application-s': 1100px,
+  'laptop': 1024px,
+  'tablet': 900px,
+  'mobile-h': 780px,
+  'mobile-m': 700px,
+  'mobile-s': 600px,
+  'smartphone': 480px,
+  'z-flip-series': 300px,
+);
+
+@mixin respond-min($breakpoint) {
+  $size: map-get($breakpoints, $breakpoint);
+  @media (min-width: $size) {
+    @content;
+  }
+}
+
+@mixin respond-max($breakpoint) {
+  $size: map-get($breakpoints, $breakpoint);
+  @media (max-width: $size) {
+    @content;
+  }
+}
+
+@mixin respond-between($min-breakpoint, $max-breakpoint) {
+  $min: map-get($breakpoints, $min-breakpoint);
+  $max: map-get($breakpoints, $max-breakpoint);
+  @media (min-width: $min) and (max-width: $max) {
+    @content;
+  }
+}

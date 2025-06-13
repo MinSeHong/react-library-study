@@ -1,16 +1,15 @@
 'use client';
+import Header from '@/app/_components/header';
 import dynamic from 'next/dynamic';
-
-const Angular = dynamic(() => import('./angular'), {
-  ssr: false,
-});
-
+import styles from '@/app/matter/matter.module.scss';
+import Angular from './angular';
 
 export default function HomePage() {
   return (
-    <main>
+    <div className={styles.layout}>
+          <Header/>
       <h1>Angular 기능</h1>
       <Angular></Angular>
-    </main>
+    </div>
   );
 }

@@ -1,5 +1,7 @@
 'use client';
+import Header from '@/app/_components/header';
 import dynamic from 'next/dynamic';
+import styles from '@/app/matter/matter.module.scss';
 
 const MouseConstraintEvent = dynamic(() => import('./mouseConstraintEvent'), {
   ssr: false,
@@ -8,9 +10,10 @@ const MouseConstraintEvent = dynamic(() => import('./mouseConstraintEvent'), {
 
 export default function HomePage() {
   return (
-    <main>
-      <h1>마우스 클릭시 Body 색상 변경</h1>
+    <div className={styles.layout}>
+      <Header/>
+      <h1>마우스 클릭시 Bodies 색상 변경</h1>
       <MouseConstraintEvent></MouseConstraintEvent>
-    </main>
+    </div>
   );
 }

@@ -1,16 +1,15 @@
 'use client';
+import Header from '@/app/_components/header';
 import dynamic from 'next/dynamic';
-
-const Wrapping = dynamic(() => import('./wrapping'), {
-  ssr: false,
-});
-
+import styles from '@/app/matter/matter.module.scss';
+import Wrapping from './wrapping';
 
 export default function HomePage() {
   return (
-    <main>
+    <div className={styles.layout}>
+        <Header/>
       <h1>Wrapping 기능</h1>
       <Wrapping></Wrapping>
-    </main>
+    </div>
   );
 }

@@ -1,16 +1,17 @@
 'use client';
+import Header from '@/app/_components/header';
 import dynamic from 'next/dynamic';
-
-const Slingshot = dynamic(() => import('./slingshot'), {
-  ssr: false,
-});
-
+import styles from '@/app/matter/matter.module.scss';
+import Slingshot from './slingshot';
 
 export default function HomePage() {
   return (
-    <main style={{display:"flex", flexDirection:"column", alignItems:"center",justifyItems:"center"}}>
-      <h1 style={{color:"black"}}>Slingshot</h1>
-      <Slingshot></Slingshot>
-    </main>
+    <div className={styles.layout}>
+      <Header/>
+      <main style={{display:"flex", flexDirection:"column", alignItems:"center",justifyItems:"center"}}>
+        <h1 style={{color:"black"}}>앵그리버드 만들기</h1>
+        <Slingshot></Slingshot>
+      </main>
+    </div>
   );
 }

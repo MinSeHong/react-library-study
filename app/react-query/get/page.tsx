@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 import { useQuery } from '@tanstack/react-query';
+import Header from "@/app/_components/header";
 
 async function fetchPosts() {
   const res = await fetch('https://jsonplaceholder.typicode.com/posts');
@@ -24,6 +25,9 @@ export default function Home() {
   if (isError) return <p>에러 발생: {(error as Error).message}</p>;
 
   return (
+    <>
+    <Header/>
+
     <div className={styles.page}>
     <h1>게시글 목록</h1>
       <ul>
@@ -35,5 +39,6 @@ export default function Home() {
         ))}
       </ul>
     </div>
+        </>
   );
 }

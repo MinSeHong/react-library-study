@@ -1,13 +1,14 @@
 'use client';
+import Header from '@/app/_components/header';
 import BodiesFromVertices from './bodiesFromVertices';
-
+import styles from '@/app/matter/matter.module.scss';
 
 export default function HomePage() {
- console.log("부모 컴포넌트 렌더링");
   return (
-    <main>
-      <h1>BodiesFromVertices SVG 생성</h1>
+    <div className={styles.layout}>
+      <Header/>
+      <h1>BodiesFromVertices 생성</h1>
       <BodiesFromVertices></BodiesFromVertices>
-    </main>
+    </div>
   );
 }

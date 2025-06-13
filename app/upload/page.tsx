@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Header from '../_components/header';
 
 const ImageUploader: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -28,6 +29,9 @@ const ImageUploader: React.FC = () => {
   }, [previewUrl]);
 
   return (
+    <>
+    <Header/>
+
     <div>
       <input type="file" accept="image/*" onChange={handleFileChange} />
       {previewUrl && (
@@ -37,6 +41,7 @@ const ImageUploader: React.FC = () => {
         </div>
       )}
     </div>
+        </>
   );
 };
 

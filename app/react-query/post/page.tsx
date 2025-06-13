@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import Header from '@/app/_components/header';
 
 //게시글 생성 시 보낼 데이터 타입스크립트
 interface NewPost {
@@ -49,6 +50,9 @@ export default function PostCreator() {
   };
   
   return (
+    <>      
+    <Header/>
+
     <div>
       <h2>게시글 작성</h2>
       <form onSubmit={handleSubmit}>
@@ -71,5 +75,6 @@ export default function PostCreator() {
         </div>
       )}
     </div>
+        </>
   );
 }

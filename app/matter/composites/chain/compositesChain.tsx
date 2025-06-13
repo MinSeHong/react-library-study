@@ -8,32 +8,74 @@ const CompositesChain: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    //Engine//
+    //물리 계산을 담당하는 엔진이다.
+    //중력, 충돌, 속도, 마찰 같은 물리 법칙에 따른 시뮬레이션 계산을 수행한다.
     const Engine = Matter.Engine;
+
+    //Render//
+    //Three js의 Renderer와 같다.
+    //Matter.js의 물리 시뮬레이션 결과를 브라우저에 시각적으로 보여주는 역할을 한다.
     const Render = Matter.Render;
+
+    //Runner//
+    //시간에 따라 물리 시뮬레이션이 계속되도록 한다. 애니메이션 프레임 루프인 requestAnimationFrame을 내부적으로 사용한다.
     const Runner = Matter.Runner;
+
+    //Bodies//
+    //실제로 화면에 나오는 사각형, 원, 다각형 등의 물체를 만드는 도구이다.
     const Bodies = Matter.Bodies;
+
+    //Composite//
+    //Composite는 여러 개의 바디를 하나의 그룹으로 묶는 역할을 한다.
     const Composite = Matter.Composite;
+
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    //Events//
+    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고, 
+    // 콜백 함수를 등록해 원하는 동작을 실행할 수 있게 해준다.
     const Events = Matter.Events;
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    
+    //Mouse//
+    //마우스를 이용해 조작할 수 있는 기능을 제공한다.
     const Mouse = Matter.Mouse;
     const MouseConstraint = Matter.MouseConstraint;
+    
 
+    //물리 엔진 인스턴스를 생성한다.
     const engine = Engine.create();
+
+    //시뮬레이션에 등장할 객체(바디)들을 담는 역할을 한다.
+    //Bodies를 넣기 위해 Composite.add(world, [Boides])형태로 넣는다.
     const world = engine.world;
 
+    //Matter JS의 Canvas 크기를 지정한다.
     const width = 800;
     const height = 600;
 
+
+    //시각적 출력을 위한 렌더러를 생성한다.
     const render = Render.create({
+      //렌더링 할 DOM요소를 선택한다.
+      //즉 return 부분에 있는 div안에 cavnas를 생성한다.
       element: sceneRef.current!,
+
+      //렌더링 할 요소를 선택한다. Matter.Engine.create()의 값을 사용한다.
       engine: engine,
+
+      //기본 속성을 정의한다.
       options: {
+        //캔버스의 width, height 설정
         width,
         height,
+
+        //와이어프레임으로 보이게 할지 정의한다. 기본 값은 false이다.
         wireframes: false,
+
+        //canvas의 색상을 설정한다. 색상을 투명하게 하고 싶으면 'transparent'를 넣는다.
         background: '#fafafa',
-        showCollisions:false,
-        showVelocity:false
-      },
+      }
     });
 
     const group: number = Matter.Body.nextGroup(true);
