@@ -37,7 +37,7 @@ Typescript를 이용한 Matter 사용방법을 만들었습니다.<br/>
 
 
 ## 주요 예제로 이동할 수 있는 네비게이션 추가
-![Image](https://github.com/user-attachments/assets/bc083f7b-f727-404d-8971-ca460fc945ab)
 
-![Image](https://github.com/user-attachments/assets/0116472f-23c2-4d80-9f4a-43b4cce319d5)
+<img src="https://github.com/user-attachments/assets/bc083f7b-f727-404d-8971-ca460fc945ab" width="200" height="200"/>
+<img src="https://github.com/user-attachments/assets/0116472f-23c2-4d80-9f4a-43b4cce319d5" width="200" height="200"/>
 
