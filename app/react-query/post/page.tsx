@@ -53,8 +53,8 @@ export default function PostCreator() {
     <>      
     <Header/>
 
-    <div>
-      <h2>게시글 작성</h2>
+    <div style={{textAlign:"center", paddingTop:"40px"}}>
+      <h1>게시글 작성</h1>
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="제목" value={title} onChange={(e) => setTitle(e.target.value)}/>
         <br />
@@ -75,6 +75,6 @@ export default function PostCreator() {
         </div>
       )}
     </div>
-        </>
+    </>
   );
 }

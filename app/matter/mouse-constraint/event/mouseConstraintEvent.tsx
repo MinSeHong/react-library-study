@@ -109,7 +109,6 @@ const MouseConstraintEvent: React.FC = () => {
     const mouse = Mouse.create(render.canvas);
 
     //마우스의 제약 조건을 설정한다.
-
     //engine: 현재 사용하는 Matter.js 엔진을 연결한다.
     //mouse: 위에서 만든 마우스 객체를 연결해준다.
     //constraint: 마우스로 물체를 잡을 때의 "물리적인 성질"을 정의해준다.

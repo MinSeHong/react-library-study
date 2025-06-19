@@ -20,25 +20,30 @@ export default function Home() {
     queryFn: fetchPosts,
   });
     
-  if (isLoading) return <p>로딩중...</p>;
+  if (isLoading) return (
+    <>
+      <Header/>
+      <h1 style={{textAlign:"center", paddingTop:"40px"}}>Loading</h1>
+    </>
+);
 
-  if (isError) return <p>에러 발생: {(error as Error).message}</p>;
+  if (isError) return <p>{(error as Error).message}</p>;
 
   return (
     <>
     <Header/>
 
-    <div className={styles.page}>
-    <h1>게시글 목록</h1>
+    <div style={{textAlign:"center", paddingTop:"40px"}}>
+    <h1>게시글 목록 가져오기</h1>
       <ul>
         {data.map((post: any) => (
-          <li key={post.id}>
+          <div key={post.id} style={{border:"1px solid black"}}>
             <strong>{post.title}</strong>
             <p>{post.body}</p>
-          </li>
+          </div>
         ))}
       </ul>
     </div>
-        </>
+    </>
   );
 }

@@ -15,12 +15,12 @@ export default function Counter() {
     <Header/>
     
 
-    <div>
+    <div style={{textAlign:"center", paddingTop:"40px"}}>
       <h1>Count: {count}</h1>
       <button onClick={() => dispatch(decrement())}>-</button>
       <button onClick={() => dispatch(increment())}>+</button>
-      <button onClick={() => dispatch(incrementByAmount(7))}>+</button>
+      <button onClick={() => dispatch(incrementByAmount(7))}>7</button>
     </div>
-        </>
+    </>
   );
 }
