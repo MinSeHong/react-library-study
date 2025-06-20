@@ -72,6 +72,9 @@ const Slingshot: React.FC = () => {
         background: '#fafafa',
         showCollisions: false,
         showVelocity: false,
+        //★★★★★★
+        // 캔버스의 해상도를 디스플레이 해상도에 맞게 스케일 조정하는 기능이다.
+        pixelRatio: window.devicePixelRatio || 1,
       },
     });
 
@@ -173,6 +176,14 @@ const Slingshot: React.FC = () => {
         }
       }
     );
+
+
+    //pixelRatio를 해상도에 맞게 설정을 하면 마우스의 위치는 해상도에 맞게 바뀌지 않는다.
+    //이때 Matter.Mouse.setScale을 사용한다.
+    Matter.Mouse.setScale(mouse, {
+      x: 1 / window.devicePixelRatio,
+      y: 1 / window.devicePixelRatio,
+    });
 
     var flag: boolean = false;
 
