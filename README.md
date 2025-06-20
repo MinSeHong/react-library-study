@@ -9,7 +9,6 @@ React을 이용한 library 공부 자료입니다.<br/>
 Typescript를 이용한 React-Query, React-Redux toolkit 예시를 만들었습니다.<br/>
 Typescript를 이용한 Matter 사용방법을 만들었습니다.<br/>
 코드 안에 상세한 설명을 넣어, 다른 사람들이 공부할 수 있도록 제작했습니다.<br/>
-초기 프로젝트이기 떄문에 계속 개선할 예정입니다.
 </p>
 
 ---
@@ -39,4 +38,10 @@ Typescript를 이용한 Matter 사용방법을 만들었습니다.<br/>
 > > <a href="https://www.notion.so/minsehong/Three-JS-20a4339956d0808fabe0fffbfc39fb7d?source=copy_link">초기 세팅 방법</a><br/> >><a href="https://www.notion.so/minsehong/Three-JS-Mesh-20a4339956d080c6a5efc8dbdd387f58?source=copy_link">Mesh 설명</a><br/>
 
 ## 프로젝트 소개
-<img src="https://github.com/user-attachments/assets/bc083f7b-f727-404d-8971-ca460fc945ab" width="400" height="350"/>
+<img src="https://github.com/user-attachments/assets/bc083f7b-f727-404d-8971-ca460fc945ab" width="700" height="500"/><br/>
+> 메인화면 이동 기능<br/>
+> > 메인화면 이동기능을 넣어 쉽게 확인할 수 있습니다.<br/><br/>
+
+<img src="https://github.com/user-attachments/assets/ca2099ac-0f72-47b7-91a6-fb9922bd5333" width="700" height="500"/><br/>
+> 코드 상세 설명<br/>
+> > 공부를 하면서 코드 대한 설명 주석을 넣었습니다.<br/>
