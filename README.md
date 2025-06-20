@@ -38,6 +38,5 @@ Typescript를 이용한 Matter 사용방법을 만들었습니다.<br/>
 >
 > > <a href="https://www.notion.so/minsehong/Three-JS-20a4339956d0808fabe0fffbfc39fb7d?source=copy_link">초기 세팅 방법</a><br/> >><a href="https://www.notion.so/minsehong/Three-JS-Mesh-20a4339956d080c6a5efc8dbdd387f58?source=copy_link">Mesh 설명</a><br/>
 
-## 주요 예제로 이동할 수 있는 네비게이션 추가
-
-<img src="https://github.com/user-attachments/assets/bc083f7b-f727-404d-8971-ca460fc945ab" width="700" height="500"/>
+## 프로젝트 소개
+<img src="https://github.com/user-attachments/assets/bc083f7b-f727-404d-8971-ca460fc945ab" width="400" height="350"/>
