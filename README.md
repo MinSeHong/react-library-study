@@ -1,4 +1,4 @@
-*****
+---
 
 <p align='center'>
   <img src= "https://capsule-render.vercel.app/api?type=soft&color=auto&text=React%20library%20study&fontSize=50&animation=twinkling"/>
@@ -12,29 +12,31 @@ Typescript를 이용한 Matter 사용방법을 만들었습니다.<br/>
 초기 프로젝트이기 떄문에 계속 개선할 예정입니다.
 </p>
 
-*****
+---
 
 <br/>
 
 ## 주요 예제들
->React-query<br/>
->><a href="https://www.notion.so/minsehong/React-Query-2024339956d080b89c0ee9173359f1fc?source=copy_link">초기 세팅 방법</a><br/>
 
->React-redux<br/>
->><a href="https://www.notion.so/minsehong/React-Redux-ToolKit-2024339956d080f5a462d3981ed6e7d0?source=copy_link">초기 세팅 방법</a><br/>
+> React-query<br/>
+>
+> > <a href="https://www.notion.so/minsehong/React-Query-2024339956d080b89c0ee9173359f1fc?source=copy_link">초기 세팅 방법</a><br/>
 
->Matter js<br/>
->><a href="https://www.notion.so/minsehong/Matter-JS-20b4339956d080ac93ececf154a93695?source=copy_link">초기 세팅 방법</a><br/>
->>Mouse Constraint<br/>
->>composites<br/>
->>bodies<br/>
->>Event<br/>
+> React-redux<br/>
+>
+> > <a href="https://www.notion.so/minsehong/React-Redux-ToolKit-2024339956d080f5a462d3981ed6e7d0?source=copy_link">초기 세팅 방법</a><br/>
 
->Three js<br/>
->><a href="https://www.notion.so/minsehong/Three-JS-20a4339956d0808fabe0fffbfc39fb7d?source=copy_link">초기 세팅 방법</a><br/>
->><a href="https://www.notion.so/minsehong/Three-JS-Mesh-20a4339956d080c6a5efc8dbdd387f58?source=copy_link">Mesh 설명</a><br/>
+> Matter js<br/>
+>
+> > <a href="https://www.notion.so/minsehong/Matter-JS-20b4339956d080ac93ececf154a93695?source=copy_link">초기 세팅 방법</a><br/>
+> > Mouse Constraint<br/>
+> > composites<br/>
+> > bodies<br/>
+> > Event<br/>
 
-
+> Three js<br/>
+>
+> > <a href="https://www.notion.so/minsehong/Three-JS-20a4339956d0808fabe0fffbfc39fb7d?source=copy_link">초기 세팅 방법</a><br/> >><a href="https://www.notion.so/minsehong/Three-JS-Mesh-20a4339956d080c6a5efc8dbdd387f58?source=copy_link">Mesh 설명</a><br/>
 
 ## 주요 예제로 이동할 수 있는 네비게이션 추가
 

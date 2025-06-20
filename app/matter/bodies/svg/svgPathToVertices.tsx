@@ -1,17 +1,22 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Matter from 'matter-js';
+import Matter, { Svg } from 'matter-js';
 
-const mouseConstraint: React.FC = () => {
+
+//npm install svg-path-properties
+import { svgPathProperties } from 'svg-path-properties'; 
+
+const SvgPathToVertices: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
+
+
 
   useEffect(() => {
     //Engine//
     //물리 계산을 담당하는 엔진이다.
     //중력, 충돌, 속도, 마찰 같은 물리 법칙에 따른 시뮬레이션 계산을 수행한다.
     const Engine = Matter.Engine;
-
     //Render//
     //Three js의 Renderer와 같다.
     //Matter.js의 물리 시뮬레이션 결과를 브라우저에 시각적으로 보여주는 역할을 한다.
@@ -29,12 +34,16 @@ const mouseConstraint: React.FC = () => {
     //Composite는 여러 개의 바디를 하나의 그룹으로 묶는 역할을 한다.
     const Composite = Matter.Composite;
 
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+
+    //Events//
+    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고,
+    // 콜백 함수를 등록해 원하는 동작을 실행할 수 있게 해준다.
+    const Events = Matter.Events;
+
     //Mouse//
     //마우스를 이용해 조작할 수 있는 기능을 제공한다.
     const Mouse = Matter.Mouse;
     const MouseConstraint = Matter.MouseConstraint;
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //물리 엔진 인스턴스를 생성한다.
     const engine = Engine.create();
@@ -94,12 +103,59 @@ const mouseConstraint: React.FC = () => {
     Composite.add(world, [ground, box]);
 
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    // SVG 불러오기
+     fetch('/assets/icons/blueberry.svg')
+      .then(res => res.text())
+      .then(raw => {
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(raw, 'image/svg+xml');
+        const paths = svgDoc.querySelectorAll('path');
+
+        paths.forEach((path, index) => {
+          const d = path.getAttribute('d');
+          if (!d) return;
+
+          const properties = new svgPathProperties(d);
+          const totalLength = properties.getTotalLength();
+          const sampledVertices: Matter.Vector[] = [];
+
+          // 샘플링 간격 (작게 하면 더 부드러움)
+          const sampleStep = 2;
+          for (let i = 0; i < totalLength; i += sampleStep) {
+            const point = properties.getPointAtLength(i);
+            sampledVertices.push({ x: point.x, y: point.y });
+          }
+
+          // 경로 닫기 (시작점 다시 추가)
+          sampledVertices.push({ ...sampledVertices[0] });
+
+          if (sampledVertices.length >= 3) {
+            // 각 path 위치 약간씩 오프셋(선택 사항)
+            const offsetX = 0;
+            const offsetY = 0;
+
+            // 위치 조정 (예: 전체 SVG viewBox 보정할 때 필요)
+            const translatedVertices = sampledVertices.map(v => ({
+              x: v.x + offsetX,
+              y: v.y + offsetY,
+            }));
+
+            const body = Bodies.fromVertices(400, 100, [translatedVertices], {
+              render: { fillStyle: '#f55' }
+            });
+
+            if (body) {
+              Composite.add(world, body);
+            }
+          }
+        });
+      })
+      .catch(console.error);
 
     //마우스 입력을 추적할 수 있도록 Mouse 객체를 생성한다.
     const mouse = Mouse.create(render.canvas);
 
     //마우스의 제약 조건을 설정한다.
-
     //engine: 현재 사용하는 Matter.js 엔진을 연결한다.
     //mouse: 위에서 만든 마우스 객체를 연결해준다.
     //constraint: 마우스로 물체를 잡을 때의 "물리적인 성질"을 정의해준다.
@@ -115,6 +171,30 @@ const mouseConstraint: React.FC = () => {
 
     //마우스 제약 조건을 월드에 추가해 마우스 기능을 사용할 수 있도록 한다.
     Composite.add(world, mouseConstraint);
+
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    // 마우스 드래그 시 색상 변경
+    Events.on(
+      mouseConstraint,
+      'startdrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        if (body) {
+          body.render.fillStyle = '#e74c3c'; // 드래그 시작 시 빨간색으로 변경한다.
+        }
+      }
+    );
+
+    Events.on(
+      mouseConstraint,
+      'enddrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        if (body) {
+          body.render.fillStyle = '#3498db'; // 드래그 끝나면 원래 색상으로 변경한다.
+        }
+      }
+    );
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //Engine.run//
@@ -144,4 +224,4 @@ const mouseConstraint: React.FC = () => {
   return <div ref={sceneRef} />;
 };
 
-export default mouseConstraint;
+export default SvgPathToVertices;

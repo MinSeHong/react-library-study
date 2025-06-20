@@ -1,17 +1,20 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Matter from 'matter-js';
+import Matter, { Composites } from 'matter-js';
 
-const mouseConstraint: React.FC = () => {
+
+
+const CompoundStack: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
+
+
 
   useEffect(() => {
     //Engine//
     //물리 계산을 담당하는 엔진이다.
     //중력, 충돌, 속도, 마찰 같은 물리 법칙에 따른 시뮬레이션 계산을 수행한다.
     const Engine = Matter.Engine;
-
     //Render//
     //Three js의 Renderer와 같다.
     //Matter.js의 물리 시뮬레이션 결과를 브라우저에 시각적으로 보여주는 역할을 한다.
@@ -29,12 +32,16 @@ const mouseConstraint: React.FC = () => {
     //Composite는 여러 개의 바디를 하나의 그룹으로 묶는 역할을 한다.
     const Composite = Matter.Composite;
 
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+
+    //Events//
+    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고,
+    // 콜백 함수를 등록해 원하는 동작을 실행할 수 있게 해준다.
+    const Events = Matter.Events;
+
     //Mouse//
     //마우스를 이용해 조작할 수 있는 기능을 제공한다.
     const Mouse = Matter.Mouse;
     const MouseConstraint = Matter.MouseConstraint;
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //물리 엔진 인스턴스를 생성한다.
     const engine = Engine.create();
@@ -82,24 +89,35 @@ const mouseConstraint: React.FC = () => {
       render: { fillStyle: '#333' },
     });
 
-    //박스 역할을 하는 정사각형을 생성한다.
-    const box = Bodies.rectangle(400, 0, 80, 80, {
-      //restitution//
-      //공기 저항을 지정한다. 기본값은 1이고 낮을수록 떨어지는 속도가 줄어든다.
-      restitution: 0.5,
-      render: { fillStyle: '#3498db' },
-    });
-
     //바닥인 ground와 박스인 box를 world에 생성한다.
-    Composite.add(world, [ground, box]);
+    Composite.add(world, [ground]);
 
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    var size = 50;
 
+    //Composites.stack을 이용한 배열 형태 만들기
+    //partA와 partB를 만들고 Body.create로 하나의 물체로 생성한다.
+    var stack = Composites.stack(100, 600 - 17 - size * 6, 12, 6, 0, 0, function(x:number, y:number) {
+        var partA = Bodies.rectangle(x, y, size, size / 5, {
+          render:{
+          strokeStyle:"black",
+          lineWidth:2}
+        }),
+        partB = Bodies.rectangle(x, y, size / 5, size, { render: partA.render});
+
+        //partA와 partB 두 직사각형을 합쳐서 하나의 물체를 만든다.
+        return Matter.Body.create({
+            parts: [partA, partB]
+        });
+    });
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+
+
+    Composite.add(world, [stack]);
     //마우스 입력을 추적할 수 있도록 Mouse 객체를 생성한다.
     const mouse = Mouse.create(render.canvas);
 
     //마우스의 제약 조건을 설정한다.
-
     //engine: 현재 사용하는 Matter.js 엔진을 연결한다.
     //mouse: 위에서 만든 마우스 객체를 연결해준다.
     //constraint: 마우스로 물체를 잡을 때의 "물리적인 성질"을 정의해준다.
@@ -115,6 +133,30 @@ const mouseConstraint: React.FC = () => {
 
     //마우스 제약 조건을 월드에 추가해 마우스 기능을 사용할 수 있도록 한다.
     Composite.add(world, mouseConstraint);
+
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    // 마우스 드래그 시 색상 변경
+    Events.on(
+      mouseConstraint,
+      'startdrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        if (body) {
+          body.render.fillStyle = '#e74c3c'; // 드래그 시작 시 빨간색으로 변경한다.
+        }
+      }
+    );
+
+    Events.on(
+      mouseConstraint,
+      'enddrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        if (body) {
+          body.render.fillStyle = '#3498db'; // 드래그 끝나면 원래 색상으로 변경한다.
+        }
+      }
+    );
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //Engine.run//
@@ -144,4 +186,4 @@ const mouseConstraint: React.FC = () => {
   return <div ref={sceneRef} />;
 };
 
-export default mouseConstraint;
+export default CompoundStack;

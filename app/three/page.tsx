@@ -6,8 +6,10 @@ import Header from '../_components/header';
 export default function HomePage() {
   return (
     <>
-      <Header/>
-      <h1 style={{textAlign:"center", paddingTop:"40px"}}>Hello Three.js in Next.js!</h1>
+      <Header />
+      <h1 style={{ textAlign: 'center', paddingTop: '40px' }}>
+        Hello Three.js in Next.js!
+      </h1>
       <ThreeScene />
     </>
   );

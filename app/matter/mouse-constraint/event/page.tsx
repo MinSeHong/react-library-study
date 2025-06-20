@@ -7,11 +7,10 @@ const MouseConstraintEvent = dynamic(() => import('./mouseConstraintEvent'), {
   ssr: false,
 });
 
-
 export default function HomePage() {
   return (
     <div className={styles.layout}>
-      <Header/>
+      <Header />
       <h1>마우스 클릭시 Bodies 색상 변경</h1>
       <MouseConstraintEvent></MouseConstraintEvent>
     </div>

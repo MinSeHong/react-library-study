@@ -6,7 +6,7 @@ import styles from '@/app/matter/matter.module.scss';
 export default function HomePage() {
   return (
     <div className={styles.layout}>
-      <Header/>
+      <Header />
       <h1>BodiesFromVertices 생성</h1>
       <BodiesFromVertices></BodiesFromVertices>
     </div>

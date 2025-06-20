@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from 'react';
 import Matter, { Common, Composites, Constraint } from 'matter-js';
 
-
 const CompositesChain: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
 
@@ -32,16 +31,15 @@ const CompositesChain: React.FC = () => {
 
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
     //Events//
-    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고, 
+    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고,
     // 콜백 함수를 등록해 원하는 동작을 실행할 수 있게 해준다.
     const Events = Matter.Events;
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-    
+
     //Mouse//
     //마우스를 이용해 조작할 수 있는 기능을 제공한다.
     const Mouse = Matter.Mouse;
     const MouseConstraint = Matter.MouseConstraint;
-    
 
     //물리 엔진 인스턴스를 생성한다.
     const engine = Engine.create();
@@ -53,7 +51,6 @@ const CompositesChain: React.FC = () => {
     //Matter JS의 Canvas 크기를 지정한다.
     const width = 800;
     const height = 600;
-
 
     //시각적 출력을 위한 렌더러를 생성한다.
     const render = Render.create({
@@ -75,9 +72,8 @@ const CompositesChain: React.FC = () => {
 
         //canvas의 색상을 설정한다. 색상을 투명하게 하고 싶으면 'transparent'를 넣는다.
         background: '#fafafa',
-      }
+      },
     });
-
 
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
     //Matter.Body.nextGroup(true);//
@@ -86,21 +82,27 @@ const CompositesChain: React.FC = () => {
     //Chain으로 Boxes 연결 했을 때, 서로 충돌하지 않도록 하기 위해서 사용해야한다.
     const group: number = Matter.Body.nextGroup(true);
 
-
     //[1] Composties.stack을 이용해서 1행 15열의 Box를 생성한다.
-    var boxes = Composites.stack(160, 290, 15, 1, 0, 0, function(x:number, y:number) {
-        return Bodies.rectangle(x-20, y, 53, 20, {
-            collisionFilter: { group: group },
-            density: 0.005,
-            chamfer: { radius: 5 },
-            frictionAir: 0.05,
-            render: { 
-              strokeStyle: 'black',
-              lineWidth:2
-            }
+    var boxes = Composites.stack(
+      160,
+      290,
+      15,
+      1,
+      0,
+      0,
+      function (x: number, y: number) {
+        return Bodies.rectangle(x - 20, y, 53, 20, {
+          collisionFilter: { group: group },
+          density: 0.005,
+          chamfer: { radius: 5 },
+          frictionAir: 0.05,
+          render: {
+            strokeStyle: 'black',
+            lineWidth: 2,
+          },
         });
-    });
-
+      }
+    );
 
     //[2] Composties.stack으로 생성한 Box 사이에 Chain을 세팅한다.
     //인자의 순서에 따라
@@ -109,75 +111,78 @@ const CompositesChain: React.FC = () => {
     // 바디의 오른쪽 끝 근처 (x = 0.3, y = 0)를 기준으로 연결한다.
     // -0.3, 0 //
     //다음 바디의 왼쪽 끝 근처 (x = -0.3, y = 0)를 기준으로 연결한다.
-    Composites.chain(boxes, 0.3, 0, -0.3, 0, { 
-        stiffness: 0.99,
-        length: 0.0001,
-        render: {
-            visible: false
-            
-        }
+    Composites.chain(boxes, 0.3, 0, -0.3, 0, {
+      stiffness: 0.99,
+      length: 0.0001,
+      render: {
+        visible: false,
+      },
     });
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-
 
     //Composites.stack//
     //Bodies를 여러개 쌓는 역할을 한다//
 
     //인자는 다음과 같이 되어있다.//
     //Composites.stack(x, y, columns, rows, columnGap, rowGap, callback)//
-    var stack = Composites.stack(250, 50, 6, 3, 0, 0, function(x:number, y:number) {
-        return Bodies.rectangle(x, y, 50, 50,  {
-            chamfer:{radius:5},
-            render: {
-              strokeStyle: 'black',
-              lineWidth:2
-            }
+    var stack = Composites.stack(
+      250,
+      50,
+      6,
+      3,
+      0,
+      0,
+      function (x: number, y: number) {
+        return Bodies.rectangle(x, y, 50, 50, {
+          chamfer: { radius: 5 },
+          render: {
+            strokeStyle: 'black',
+            lineWidth: 2,
+          },
         });
-    });
+      }
+    );
 
-
-
-    
-
-    Composite.add(world, [boxes,stack,
-        Bodies.rectangle(30, 490, 220, 380, { 
-            isStatic: true, 
-            chamfer: { radius: 20 },
-            render:{
-              fillStyle:"green",
-              strokeStyle:"black",
-              lineWidth:2
-            }
-        }),
-        Bodies.rectangle(770, 490, 220, 380, { 
-            isStatic: true, 
-            chamfer: { radius: 20 },
-            render:{
-              fillStyle:"green",
-              strokeStyle:"black",
-              lineWidth:2
-            }
-        }),
-        //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-        //Constraint.create//
-        //바디와 바디, 또는 바디와 월드의 점을 스프링처럼 연결해준다.
-        Constraint.create({ 
-            pointA: { x: 140, y: 300 },  // 고정 지점을 지정한다.
-            bodyB: boxes.bodies[0],     // boxes 배열의 첫 번째 바디랑 연결한다.
-            pointB: { x: -25, y: 0 }, // 바디의 왼쪽 끝 근처에 연결한다.
-            length: 2,  // 연결 거리 설정정
-            stiffness: 0.9 // 스프링 연결 숫자는 1까지 있으며 높을수록 강성이 높은 스프링이다.
-        }),
-        Constraint.create({ 
-            pointA: { x: 660, y: 300 }, 
-            bodyB: boxes.bodies[boxes.bodies.length - 1], 
-            pointB: { x: 25, y: 0 },
-            length: 2,
-            stiffness: 0.9
-        })
-        //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    Composite.add(world, [
+      boxes,
+      stack,
+      Bodies.rectangle(30, 490, 220, 380, {
+        isStatic: true,
+        chamfer: { radius: 20 },
+        render: {
+          fillStyle: 'green',
+          strokeStyle: 'black',
+          lineWidth: 2,
+        },
+      }),
+      Bodies.rectangle(770, 490, 220, 380, {
+        isStatic: true,
+        chamfer: { radius: 20 },
+        render: {
+          fillStyle: 'green',
+          strokeStyle: 'black',
+          lineWidth: 2,
+        },
+      }),
+      //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+      //Constraint.create//
+      //바디와 바디, 또는 바디와 월드의 점을 스프링처럼 연결해준다.
+      Constraint.create({
+        pointA: { x: 140, y: 300 }, // 고정 지점을 지정한다.
+        bodyB: boxes.bodies[0], // boxes 배열의 첫 번째 바디랑 연결한다.
+        pointB: { x: -25, y: 0 }, // 바디의 왼쪽 끝 근처에 연결한다.
+        length: 2, // 연결 거리 설정정
+        stiffness: 0.9, // 스프링 연결 숫자는 1까지 있으며 높을수록 강성이 높은 스프링이다.
+      }),
+      Constraint.create({
+        pointA: { x: 660, y: 300 },
+        bodyB: boxes.bodies[boxes.bodies.length - 1],
+        pointB: { x: 25, y: 0 },
+        length: 2,
+        stiffness: 0.9,
+      }),
+      //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
     ]);
-
 
     //마우스 입력을 추적할 수 있도록 Mouse 객체를 생성한다.
     const mouse = Mouse.create(render.canvas);
@@ -201,23 +206,31 @@ const CompositesChain: React.FC = () => {
 
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
     // color 변수를 선언해 기본 색상을 담는 용도로 사용.
-    let color:string = '';
+    let color: string = '';
     // 마우스 드래그 시 색상 변경
-    Events.on(mouseConstraint, 'startdrag', (event: Matter.IEvent<Matter.MouseConstraint>) => {
-      const body = (event as any).body;
-      //기본 색상을 저장한다.
-      color = body.render.fillStyle;
-      if (body) {
-        body.render.fillStyle = 'green';
+    Events.on(
+      mouseConstraint,
+      'startdrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        //기본 색상을 저장한다.
+        color = body.render.fillStyle;
+        if (body) {
+          body.render.fillStyle = 'green';
+        }
       }
-    });
+    );
 
-    Events.on(mouseConstraint, 'enddrag', (event: Matter.IEvent<Matter.MouseConstraint>) => {
-      const body = (event as any).body;
-      if (body) {
-        body.render.fillStyle = color; //드래그가 끝나면 기존에 담았던 색상으로 변경한다.
+    Events.on(
+      mouseConstraint,
+      'enddrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        if (body) {
+          body.render.fillStyle = color; //드래그가 끝나면 기존에 담았던 색상으로 변경한다.
+        }
       }
-    });
+    );
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //Engine.run//
@@ -227,7 +240,6 @@ const CompositesChain: React.FC = () => {
     //Render.run//
     // 화면에 실제로 렌더링을 하도록한다.
     Render.run(render);
-
 
     //Runner는 시간 간격으로 자동 업데이트를 해준다.
     //RequestAnimationFrame 기능이라고 보면 된다.

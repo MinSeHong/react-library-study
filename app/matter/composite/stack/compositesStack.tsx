@@ -30,16 +30,14 @@ const CompositesStack: React.FC = () => {
     const Composite = Matter.Composite;
 
     //Events//
-    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고, 
+    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고,
     // 콜백 함수를 등록해 원하는 동작을 실행할 수 있게 해준다.
     const Events = Matter.Events;
-    
-    
+
     //Mouse//
     //마우스를 이용해 조작할 수 있는 기능을 제공한다.
     const Mouse = Matter.Mouse;
     const MouseConstraint = Matter.MouseConstraint;
-    
 
     //물리 엔진 인스턴스를 생성한다.
     const engine = Engine.create();
@@ -51,7 +49,6 @@ const CompositesStack: React.FC = () => {
     //Matter JS의 Canvas 크기를 지정한다.
     const width = 800;
     const height = 600;
-
 
     //시각적 출력을 위한 렌더러를 생성한다.
     const render = Render.create({
@@ -76,9 +73,6 @@ const CompositesStack: React.FC = () => {
       },
     });
 
-   
-    
-
     //바닥 역할을 하는 사각형을 생성한다.
     //Bodies.rectangle은 Matter에서 기본적으로 제공하는 사각형 물체이다.
     const ground = Bodies.rectangle(width / 2, height, width, 40, {
@@ -91,36 +85,41 @@ const CompositesStack: React.FC = () => {
       render: {
         //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
         fillStyle: '#333', //색상 채우기
-        strokeStyle:'black', //윤곽선 색상 설정
-        lineWidth:2 //윤곽선 두께 설정
+        strokeStyle: 'black', //윤곽선 색상 설정
+        lineWidth: 2, //윤곽선 두께 설정
         //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
       },
     });
 
-
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-    
 
     //Composites.stack//
     //Bodies를 여러개 쌓는 역할을 한다//
 
     //인자는 다음과 같이 되어있다.//
     //Composites.stack(x, y, columns, rows, columnGap, rowGap, callback)//
-    var boxes = Composites.stack(160, 290, 15, 10, 10, 10, function(x:number, y:number) {
+    var boxes = Composites.stack(
+      160,
+      290,
+      15,
+      10,
+      10,
+      10,
+      function (x: number, y: number) {
         return Bodies.rectangle(x, y, 30, 30, {
-            density: 0.005,
-            frictionAir: 0.05,
-            render: {
-              strokeStyle:'black',
-              lineWidth:2
-            },
+          density: 0.005,
+          frictionAir: 0.05,
+          render: {
+            strokeStyle: 'black',
+            lineWidth: 2,
+          },
         });
-    });
+      }
+    );
 
     //바닥인 ground와 stack으로 넣은 boxes를 world에 생성한다.
     Composite.add(world, [ground, boxes]);
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-
 
     //마우스 입력을 추적할 수 있도록 Mouse 객체를 생성한다.
     const mouse = Mouse.create(render.canvas);
@@ -142,24 +141,30 @@ const CompositesStack: React.FC = () => {
     //마우스 제약 조건을 월드에 추가해 마우스 기능을 사용할 수 있도록 한다.
     Composite.add(world, mouseConstraint);
 
-
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
     // 마우스 드래그 시 색상 변경
-    Events.on(mouseConstraint, 'startdrag', (event: Matter.IEvent<Matter.MouseConstraint>) => {
-      const body = (event as any).body;
-      if (body) {
-        body.render.fillStyle = '#e74c3c'; // 드래그 시작 시 빨간색으로 변경한다.
+    Events.on(
+      mouseConstraint,
+      'startdrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        if (body) {
+          body.render.fillStyle = '#e74c3c'; // 드래그 시작 시 빨간색으로 변경한다.
+        }
       }
-    });
+    );
 
-    Events.on(mouseConstraint, 'enddrag', (event: Matter.IEvent<Matter.MouseConstraint>) => {
-      const body = (event as any).body;
-      if (body) {
-        body.render.fillStyle = '#3498db'; // 드래그 끝나면 색상을 변경한다.
+    Events.on(
+      mouseConstraint,
+      'enddrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        if (body) {
+          body.render.fillStyle = '#3498db'; // 드래그 끝나면 색상을 변경한다.
+        }
       }
-    });
+    );
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-
 
     //Engine.run//
     // 물리 계산을 시작한다.
@@ -168,7 +173,6 @@ const CompositesStack: React.FC = () => {
     //Render.run//
     // 화면에 실제로 렌더링을 하도록한다.
     Render.run(render);
-
 
     //Runner는 시간 간격으로 자동 업데이트를 해준다.
     //RequestAnimationFrame 기능이라고 보면 된다.
@@ -185,7 +189,6 @@ const CompositesStack: React.FC = () => {
       render.textures = {}; // 텍스처 캐시 초기화
     };
   }, []);
-
 
   return <div ref={sceneRef} />;
 };

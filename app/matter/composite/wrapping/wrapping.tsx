@@ -7,7 +7,6 @@ import Matter, { Common, Composites, Constraint } from 'matter-js';
 import MatterWrap from 'matter-wrap';
 Matter.use(MatterWrap); // 등록
 
-
 const Wrapping: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
 
@@ -36,16 +35,15 @@ const Wrapping: React.FC = () => {
 
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
     //Events//
-    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고, 
+    //물리 엔진 내부에서 발생하는 다양한 사건(예: 충돌, 업데이트, 마우스 클릭 등)을 감지하고,
     // 콜백 함수를 등록해 원하는 동작을 실행할 수 있게 해준다.
     const Events = Matter.Events;
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-    
+
     //Mouse//
     //마우스를 이용해 조작할 수 있는 기능을 제공한다.
     const Mouse = Matter.Mouse;
     const MouseConstraint = Matter.MouseConstraint;
-    
 
     //물리 엔진 인스턴스를 생성한다.
     const engine = Engine.create();
@@ -57,7 +55,6 @@ const Wrapping: React.FC = () => {
     //Matter JS의 Canvas 크기를 지정한다.
     const width = 800;
     const height = 600;
-
 
     //시각적 출력을 위한 렌더러를 생성한다.
     const render = Render.create({
@@ -79,151 +76,174 @@ const Wrapping: React.FC = () => {
 
         //canvas의 색상을 설정한다. 색상을 투명하게 하고 싶으면 'transparent'를 넣는다.
         background: '#fafafa',
-      }
+      },
     });
 
-
-    
     const group: number = Matter.Body.nextGroup(true);
 
-    var boxes = Composites.stack(160, 290, 15, 1, 0, 0, function(x:number, y:number) {
-        return Bodies.rectangle(x-20, y, 53, 20, {
-            collisionFilter: { group: group },
-            density: 0.005,
-            chamfer: { radius: 5 },
-            frictionAir: 0.05,
-            render: { 
-              strokeStyle: 'black',
-              lineWidth:2
-            }
+    var boxes = Composites.stack(
+      160,
+      290,
+      15,
+      1,
+      0,
+      0,
+      function (x: number, y: number) {
+        return Bodies.rectangle(x - 20, y, 53, 20, {
+          collisionFilter: { group: group },
+          density: 0.005,
+          chamfer: { radius: 5 },
+          frictionAir: 0.05,
+          render: {
+            strokeStyle: 'black',
+            lineWidth: 2,
+          },
         });
+      }
+    );
+
+    Composites.chain(boxes, 0.3, 0, -0.3, 0, {
+      stiffness: 0.99,
+      length: 0.0001,
+      render: {
+        visible: false,
+      },
     });
 
+    var stack = Composites.stack(
+      250,
+      50,
+      6,
+      3,
+      0,
+      0,
+      function (x: number, y: number) {
+        return Bodies.rectangle(x, y, 50, 50, {
+          chamfer: { radius: 5 },
+          render: {
+            strokeStyle: 'black',
+            lineWidth: 2,
+          },
+        });
+      }
+    );
 
-    Composites.chain(boxes, 0.3, 0, -0.3, 0, { 
-        stiffness: 0.99,
-        length: 0.0001,
+    Composite.add(world, [
+      boxes,
+      stack,
+      Bodies.rectangle(30, 490, 220, 380, {
+        isStatic: true,
+        chamfer: { radius: 20 },
         render: {
-            visible: false
-            
-        }
-    });
-
-    var stack = Composites.stack(250, 50, 6, 3, 0, 0, function(x:number, y:number) {
-        return Bodies.rectangle(x, y, 50, 50,  {
-            chamfer:{radius:5},
-            render: {
-              strokeStyle: 'black',
-              lineWidth:2
-            }
-        });
-    });
-
-    
-
-    Composite.add(world, [boxes,stack,
-        Bodies.rectangle(30, 490, 220, 380, { 
-            isStatic: true, 
-            chamfer: { radius: 20 },
-            render:{
-              fillStyle:"green",
-              strokeStyle:"black",
-              lineWidth:2
-            }
-        }),
-        Bodies.rectangle(770, 490, 220, 380, { 
-            isStatic: true, 
-            chamfer: { radius: 20 },
-            render:{
-              fillStyle:"green",
-              strokeStyle:"black",
-              lineWidth:2
-            }
-        }),
-        Constraint.create({ 
-            pointA: { x: 140, y: 300 }, 
-            bodyB: boxes.bodies[0], 
-            pointB: { x: -25, y: 0 },
-            length: 2,
-            stiffness: 0.9
-        }),
-        Constraint.create({ 
-            pointA: { x: 660, y: 300 }, 
-            bodyB: boxes.bodies[boxes.bodies.length - 1], 
-            pointB: { x: 25, y: 0 },
-            length: 2,
-            stiffness: 0.9
-        })
+          fillStyle: 'green',
+          strokeStyle: 'black',
+          lineWidth: 2,
+        },
+      }),
+      Bodies.rectangle(770, 490, 220, 380, {
+        isStatic: true,
+        chamfer: { radius: 20 },
+        render: {
+          fillStyle: 'green',
+          strokeStyle: 'black',
+          lineWidth: 2,
+        },
+      }),
+      Constraint.create({
+        pointA: { x: 140, y: 300 },
+        bodyB: boxes.bodies[0],
+        pointB: { x: -25, y: 0 },
+        length: 2,
+        stiffness: 0.9,
+      }),
+      Constraint.create({
+        pointA: { x: 660, y: 300 },
+        bodyB: boxes.bodies[boxes.bodies.length - 1],
+        pointB: { x: 25, y: 0 },
+        length: 2,
+        stiffness: 0.9,
+      }),
     ]);
 
     const mouse = Mouse.create(render.canvas);
-    const mouseConstraint:Matter.MouseConstraint = MouseConstraint.create(engine, {
-      mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: {
-          visible: false,
+    const mouseConstraint: Matter.MouseConstraint = MouseConstraint.create(
+      engine,
+      {
+        mouse,
+        constraint: {
+          stiffness: 0.2,
+          render: {
+            visible: false,
+          },
         },
-      },
-    });
+      }
+    );
     Composite.add(world, mouseConstraint);
 
     // 마우스 드래그 시 색상 변경 저장용
 
-    let color:string = '';
+    let color: string = '';
     // 마우스 드래그 시 색상 변경
-    Events.on(mouseConstraint, 'startdrag', (event: Matter.IEvent<Matter.MouseConstraint>) => {
-      const body = (event as any).body;
-      //기본 색상을 저장한다.
-      color = body.render.fillStyle;
-      if (body) {
-        body.render.fillStyle = 'green';
+    Events.on(
+      mouseConstraint,
+      'startdrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        //기본 색상을 저장한다.
+        color = body.render.fillStyle;
+        if (body) {
+          body.render.fillStyle = 'green';
+        }
       }
-    });
+    );
 
-    Events.on(mouseConstraint, 'enddrag', (event: Matter.IEvent<Matter.MouseConstraint>) => {
-      const body = (event as any).body;
-      if (body) {
-        body.render.fillStyle = color;
+    Events.on(
+      mouseConstraint,
+      'enddrag',
+      (event: Matter.IEvent<Matter.MouseConstraint>) => {
+        const body = (event as any).body;
+        if (body) {
+          body.render.fillStyle = color;
+        }
       }
-    });
+    );
 
     //마우스 클릭 이벤트
     Events.on(mouseConstraint, 'mousedown', (event) => {
       const mousePosition = event.mouse.position;
 
-      const newBody = Bodies.rectangle(mousePosition.x, mousePosition.y, 40, 40, {
-        render: {
-          strokeStyle: 'black',
-          lineWidth: 2,
-        },
-      });
+      const newBody = Bodies.rectangle(
+        mousePosition.x,
+        mousePosition.y,
+        40,
+        40,
+        {
+          render: {
+            strokeStyle: 'black',
+            lineWidth: 2,
+          },
+        }
+      );
 
       Composite.add(world, newBody);
       const allBodies = Composite.allBodies(world);
       for (let i = 0; i < allBodies.length; i++) {
         allBodies[i].plugin.wrap = {
           min: { x: 0, y: 0 },
-          max: { x: width, y: height }
+          max: { x: width, y: height },
         };
       }
-
     });
 
+    const bodies = Composite.allBodies(world);
 
     const allBodies = Composite.allBodies(world);
     for (let i = 0; i < allBodies.length; i++) {
       allBodies[i].plugin.wrap = {
         min: { x: 0, y: 0 },
-        max: { x: width, y: height }
+        max: { x: width, y: height },
       };
     }
-
-
-
-
-
-
 
     Engine.run(engine);
     Render.run(render);

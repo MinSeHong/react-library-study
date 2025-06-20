@@ -7,11 +7,10 @@ const CompositesChain = dynamic(() => import('./compositesChain'), {
   ssr: false,
 });
 
-
 export default function HomePage() {
   return (
     <div className={styles.layout}>
-          <Header/>
+      <Header />
       <h1>Composites.chain을 이용한 다리 생성</h1>
       <CompositesChain></CompositesChain>
     </div>

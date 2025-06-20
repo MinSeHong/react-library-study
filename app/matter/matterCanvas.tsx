@@ -29,10 +29,8 @@ const MatterCanvas: React.FC = () => {
     //Composite는 여러 개의 바디를 하나의 그룹으로 묶는 역할을 한다.
     const Composite = Matter.Composite;
 
-
     //물리 엔진 인스턴스를 생성한다.
     const engine = Engine.create();
-
 
     //시뮬레이션에 등장할 객체(바디)들을 담는 역할을 한다.
     //Bodies를 넣기 위해 Composite.add(world, [Boides])형태로 넣는다.
@@ -41,7 +39,6 @@ const MatterCanvas: React.FC = () => {
     //Matter JS의 Canvas 크기를 지정한다.
     const width = 800;
     const height = 600;
-
 
     //시각적 출력을 위한 렌더러를 생성한다.
     const render = Render.create({
@@ -66,7 +63,6 @@ const MatterCanvas: React.FC = () => {
       },
     });
 
-
     //바닥 역할을 하는 사각형을 생성한다.
     //Bodies.rectangle은 Matter에서 기본적으로 제공하는 사각형 물체이다.
     const ground = Bodies.rectangle(width / 2, height, width, 40, {
@@ -79,7 +75,6 @@ const MatterCanvas: React.FC = () => {
       render: { fillStyle: '#333' },
     });
 
-
     //박스 역할을 하는 정사각형을 생성한다.
     const box = Bodies.rectangle(400, 0, 80, 80, {
       //restitution//
@@ -88,10 +83,8 @@ const MatterCanvas: React.FC = () => {
       render: { fillStyle: '#3498db' },
     });
 
-
     //바닥인 ground와 박스인 box를 world에 생성한다.
     Composite.add(world, [ground, box]);
-
 
     //Engine.run//
     // 물리 계산을 시작한다.
@@ -100,7 +93,6 @@ const MatterCanvas: React.FC = () => {
     //Render.run//
     // 화면에 실제로 렌더링을 하도록한다.
     Render.run(render);
-
 
     //Runner는 시간 간격으로 자동 업데이트를 해준다.
     //RequestAnimationFrame 기능이라고 보면 된다.

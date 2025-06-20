@@ -8,16 +8,13 @@ type HeaderProps = {
 };
 
 export default function Header() {
-
   return (
     <header className={styles.header}>
-
       <div className={styles.localNavigation}>
         <Link href="/upload">
           <nav>Upload</nav>
         </Link>
       </div>
-
 
       <div className={styles.localNavigation}>
         <nav>React-Redux</nav>
@@ -63,6 +60,9 @@ export default function Header() {
         </Link>
         <Link href="/matter/composite/slingshot">
           <nav className={styles.subNavigation}>SlingShot</nav>
+        </Link>
+        <Link href="/matter/bodies/compound">
+          <nav className={styles.subNavigation}>Compound</nav>
         </Link>
       </div>
 

@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       type: 'asset/source', // 문자열로 import됨
     });
     return config;
-  }
+  },
 };
 
 export default nextConfig;

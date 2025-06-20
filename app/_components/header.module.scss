@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
 
-
 .header {
   width: 60%;
   position: fixed;
@@ -20,13 +19,12 @@
   box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.511);
   transition: all 0.2s ease-in-out;
 
-
-  .localNavigation{
+  .localNavigation {
     margin: 5px 0px;
     display: flex;
     flex-direction: column;
 
-    .subNavigation{
+    .subNavigation {
       margin-top: 8px;
       display: none;
     }
@@ -50,8 +48,8 @@
         background-image: url(/assets/images/patterns/noise.png);
       }
     }
-    &:hover{
-      .subNavigation{
+    &:hover {
+      .subNavigation {
         display: block;
       }
     }
