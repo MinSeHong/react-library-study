@@ -40,8 +40,8 @@ Typescript를 이용한 Matter 사용방법을 만들었습니다.<br/>
 ## 프로젝트 소개
 <img src="https://github.com/user-attachments/assets/bc083f7b-f727-404d-8971-ca460fc945ab" width="700" height="500"/><br/>
 > 메인화면 이동 기능<br/>
-> > 메인화면 이동기능을 넣어 쉽게 확인할 수 있습니다.<br/><br/>
+> > 메인화면 이동기능을 넣어 쉽게 확인할 수 있습니다.<br/><br/><br/><br/>
 
 <img src="https://github.com/user-attachments/assets/ca2099ac-0f72-47b7-91a6-fb9922bd5333" width="700" height="500"/><br/>
 > 코드 상세 설명<br/>
-> > 공부를 하면서 코드 대한 설명 주석을 넣었습니다.<br/>
+> > 코드 대한 주석 설명을 넣으면서 공부했습니다.<br/>
