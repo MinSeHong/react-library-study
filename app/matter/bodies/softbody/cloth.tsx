@@ -9,10 +9,8 @@ Matter.use(MatterWrap); // 등록
 
 
 
-const Collision: React.FC = () => {
+const Cloth: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
-
-
 
   useEffect(() => {
     //Engine//
@@ -84,6 +82,35 @@ const Collision: React.FC = () => {
       },
     });
 
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    // 천처럼 보이는 softBody를 생성하는 기능.
+    const cloth = Composites.softBody(
+      185,// 시작 X
+      100,// 시작 Y
+      10, // 가로 개수
+      6,  // 세로 개수
+      10,  // X 간격
+      10,  // Y 간격
+      false,// crossBrace (십자형 대각선 연결 여부)
+      15,   // particle radius Circle의 반지름 길이 설정
+      {
+        inertia: Infinity
+      },
+      {
+        stiffness: 0.06, // 제약 강도
+        render: { 
+          visible: true,
+        },  // 제약 강도가 있는 선 색상 설정
+      }
+    );
+
+    // 위 1행을 고정한다.
+    for (let i = 0; i < 10; i++) {
+      cloth.bodies[i].isStatic = true;
+    }
+
+    Matter.World.add(world, cloth);
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //Wrapping 플러그인 생성 함수
     //물체가 오른쪽 화면 끝으로 나가면 왼쪽에서 다시 나타나도록 한다.
@@ -126,58 +153,9 @@ const Collision: React.FC = () => {
     Composite.add(world, mouseConstraint);
 
 
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
-    // 색상 A,B String 생성
-    var colorA:string = '#f55a3c',
-        colorB:string = '#f5d259';
-
-    // 충돌을 감지하는 colldier 사각형 생성
-    var collider = Bodies.rectangle(400, 300, 350, 40, {
-        isStatic: false,
-        chamfer:{radius:15},
-        //mass:관성에 대한 저항을 추가한다.
-        mass:1,
-        render: {
-            fillStyle: 'green',
-            lineWidth: 2,
-            strokeStyle:"black"
-        },
-    });
-
-
-    //setAngularVelocity는 지속적인 회전을 추가해준다.
-    Events.on(engine, 'beforeUpdate', () => {
-      Body.setAngularVelocity(collider, 0.02); // 지속적인 회전 추가.
-    });
-
-
-
-
-    // 렌더링 시작하자마자 원 생성.
-    Composite.add(world,
-        [Bodies.circle(400, 40, 20, {
-            restitution:0.7
-            ,
-            render: {
-                fillStyle: colorB,
-                lineWidth: 2,
-                strokeStyle:"black"
-            }
-        }),
-        
-      //Constraint.create//
-      //collider의 가운데에 스프링을 연결해준다.
-      Constraint.create({
-        pointA: {x:400,y:400},
-        bodyB:collider,
-        stiffness:1,
-        length:0,
-      })]
-    );
 
     Composite.add(world, [
-        collider,
         Bodies.rectangle(400, 600, 800, 50, { 
             isStatic: true,
             render: {
@@ -186,47 +164,6 @@ const Collision: React.FC = () => {
             }
         })
     ]);
-
-
-    Events.on(mouseConstraint,'mousedown', function(event){
-      const position = event.mouse.position;
-
-      Composite.add(world,
-        Bodies.circle(position.x, position.y, Math.floor(Matter.Common.random(4,10)*2), {
-            restitution:Matter.Common.random(0.1,0.4),
-            frictionAir:Matter.Common.random(0.01,0.03)
-            ,
-            render: {
-                fillStyle: colorB,
-                lineWidth: 2,
-                strokeStyle:"black"
-            }
-        })
-      )
-      //다시 Wrapping
-      Wrapping();
-    })
-
-    //충돌을 확인하는 Events 기능 추가
-    Events.on(engine, 'collisionStart', function(event) {
-        //충돌이 감지된 객체를 모두 가져온다.
-        var pairs = event.pairs;
-        
-        //충돌이 감지된 객체를 모두 순회하면서 collider 객체와 충돌했는지 확인한다.
-        for (var i = 0, j = pairs.length; i != j; ++i) {
-            var pair = pairs[i];
-            //충돌이 된 body는 bodyA, bodyB로 구성된다.
-            //bodyA가 collider이거나 bodyB가 collider될 수 있기 때문에 2가지 조건을 생성한다.
-            if (pair.bodyA === collider) {
-                //충돌이 된 Circle의 색상을 바꾼다.
-                pair.bodyB.render.fillStyle = colorA;
-            } else if (pair.bodyB === collider) {
-              //충돌이 된 Circle의 색상을 바꾼다.
-                pair.bodyA.render.fillStyle = colorA;
-            }
-        }
-    });
-
 
 
     //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
@@ -258,4 +195,4 @@ const Collision: React.FC = () => {
   return <div ref={sceneRef} />;
 };
 
-export default Collision;
+export default Cloth;

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Matter, { Body, Composites, Constraint, Vector } from 'matter-js';
+import Matter, { Body, Common, Composites, Constraint, Vector } from 'matter-js';
 
 //matter-wrap 사용
 import MatterWrap from 'matter-wrap';
@@ -9,10 +9,8 @@ Matter.use(MatterWrap); // 등록
 
 
 
-const Collision: React.FC = () => {
+const Water: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
-
-
 
   useEffect(() => {
     //Engine//
@@ -48,7 +46,10 @@ const Collision: React.FC = () => {
     const MouseConstraint = Matter.MouseConstraint;
 
     //물리 엔진 인스턴스를 생성한다.
-    const engine = Engine.create();
+    const engine = Engine.create({
+        constraintIterations: 10,
+        positionIterations: 10,
+    });
 
     //시뮬레이션에 등장할 객체(바디)들을 담는 역할을 한다.
     //Bodies를 넣기 위해 Composite.add(world, [Boides])형태로 넣는다.
@@ -84,6 +85,37 @@ const Collision: React.FC = () => {
       },
     });
 
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    // 마우스 클릭 시 입자 생성
+    render.canvas.addEventListener('mousedown', e => {
+      createLiquid(e.offsetX, e.offsetY);
+    });
+
+    // 드래그 시 입자 연속 생성 (필요 시)
+    render.canvas.addEventListener('mousemove', e => {
+      if (mouse.button === 0) { // 왼쪽 버튼 누르고 있을 때만
+        createLiquid(e.offsetX, e.offsetY);
+      }
+    });
+
+    function randomNumBetween(min:number, max:number) {
+      return Math.random() * (max - min) + min
+    }
+
+    function createLiquid(x:number,y:number) {
+      const radius = randomNumBetween(6, 7)
+      const body = Bodies.circle(x, y, radius, {
+        friction: 0,
+        density: 1,
+        frictionAir: 0,
+        restitution: 0.7,
+        render: { fillStyle: 'red' }
+      })
+      Body.setVelocity(body, { x: 4, y: 0 })
+      Composite.add(engine.world, body)
+    }
+
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //Wrapping 플러그인 생성 함수
     //물체가 오른쪽 화면 끝으로 나가면 왼쪽에서 다시 나타나도록 한다.
@@ -125,59 +157,7 @@ const Collision: React.FC = () => {
     //마우스 제약 조건을 월드에 추가해 마우스 기능을 사용할 수 있도록 한다.
     Composite.add(world, mouseConstraint);
 
-
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-
-    // 색상 A,B String 생성
-    var colorA:string = '#f55a3c',
-        colorB:string = '#f5d259';
-
-    // 충돌을 감지하는 colldier 사각형 생성
-    var collider = Bodies.rectangle(400, 300, 350, 40, {
-        isStatic: false,
-        chamfer:{radius:15},
-        //mass:관성에 대한 저항을 추가한다.
-        mass:1,
-        render: {
-            fillStyle: 'green',
-            lineWidth: 2,
-            strokeStyle:"black"
-        },
-    });
-
-
-    //setAngularVelocity는 지속적인 회전을 추가해준다.
-    Events.on(engine, 'beforeUpdate', () => {
-      Body.setAngularVelocity(collider, 0.02); // 지속적인 회전 추가.
-    });
-
-
-
-
-    // 렌더링 시작하자마자 원 생성.
-    Composite.add(world,
-        [Bodies.circle(400, 40, 20, {
-            restitution:0.7
-            ,
-            render: {
-                fillStyle: colorB,
-                lineWidth: 2,
-                strokeStyle:"black"
-            }
-        }),
-        
-      //Constraint.create//
-      //collider의 가운데에 스프링을 연결해준다.
-      Constraint.create({
-        pointA: {x:400,y:400},
-        bodyB:collider,
-        stiffness:1,
-        length:0,
-      })]
-    );
-
     Composite.add(world, [
-        collider,
         Bodies.rectangle(400, 600, 800, 50, { 
             isStatic: true,
             render: {
@@ -187,49 +167,6 @@ const Collision: React.FC = () => {
         })
     ]);
 
-
-    Events.on(mouseConstraint,'mousedown', function(event){
-      const position = event.mouse.position;
-
-      Composite.add(world,
-        Bodies.circle(position.x, position.y, Math.floor(Matter.Common.random(4,10)*2), {
-            restitution:Matter.Common.random(0.1,0.4),
-            frictionAir:Matter.Common.random(0.01,0.03)
-            ,
-            render: {
-                fillStyle: colorB,
-                lineWidth: 2,
-                strokeStyle:"black"
-            }
-        })
-      )
-      //다시 Wrapping
-      Wrapping();
-    })
-
-    //충돌을 확인하는 Events 기능 추가
-    Events.on(engine, 'collisionStart', function(event) {
-        //충돌이 감지된 객체를 모두 가져온다.
-        var pairs = event.pairs;
-        
-        //충돌이 감지된 객체를 모두 순회하면서 collider 객체와 충돌했는지 확인한다.
-        for (var i = 0, j = pairs.length; i != j; ++i) {
-            var pair = pairs[i];
-            //충돌이 된 body는 bodyA, bodyB로 구성된다.
-            //bodyA가 collider이거나 bodyB가 collider될 수 있기 때문에 2가지 조건을 생성한다.
-            if (pair.bodyA === collider) {
-                //충돌이 된 Circle의 색상을 바꾼다.
-                pair.bodyB.render.fillStyle = colorA;
-            } else if (pair.bodyB === collider) {
-              //충돌이 된 Circle의 색상을 바꾼다.
-                pair.bodyA.render.fillStyle = colorA;
-            }
-        }
-    });
-
-
-
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //Engine.run//
     // 물리 계산을 시작한다.
@@ -258,4 +195,4 @@ const Collision: React.FC = () => {
   return <div ref={sceneRef} />;
 };
 
-export default Collision;
+export default Water;

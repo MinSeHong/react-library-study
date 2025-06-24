@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Matter, { Body, Composites, Constraint, Vector } from 'matter-js';
+import Matter, { Body, Common, Composites, Constraint, Vector } from 'matter-js';
 
 //matter-wrap 사용
 import MatterWrap from 'matter-wrap';
@@ -9,10 +9,8 @@ Matter.use(MatterWrap); // 등록
 
 
 
-const Collision: React.FC = () => {
+const Cloth: React.FC = () => {
   const sceneRef = useRef<HTMLDivElement>(null);
-
-
 
   useEffect(() => {
     //Engine//
@@ -84,6 +82,69 @@ const Collision: React.FC = () => {
       },
     });
 
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 추가된 내용 ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
+    // 천처럼 보이는 softBody 제작하기.
+    //생성할 위치 지정 xx = x축 yy = y축
+    const xx = 200, yy = 200;
+    //생성할 갯수를 행,열 갯수로 하기.
+    const columns = 20, rows = 12;
+    //Css grid의 gap과 비슷한 형태.
+    const columnGap = 5, rowGap = 5;
+    //crossBrace는 사이에 대각선 제약선을 추가하는지 설정한다.
+    const crossBrace = false;
+    //원 생성 반지름 크기 지정하기
+    const particleRadius = 8;
+
+    //충돌 그룹(collision group)을 새로 만들기 위해 사용하는 메서드로 충돌 그룹을 만든다.
+    const group = Body.nextGroup(true);
+
+    //Bodies Circle에 대한 options 설정을 만든다.
+    const particleOptions = {
+      //충돌했을 때 회전 관성을 설정한다.
+      //Infinity는 회전 관성을 제거한다.
+      //뉴턴의 진자 운동같은 기능을 제공한다.
+      inertia: Infinity,
+      //마찰력을 주는 것으로 마찰력이 높을수록 마찰에 대한 이동속도 감소가 크게 일어난다.
+      friction: 0.00001,
+      stiffness: 0.06,
+      collisionFilter: { group },
+      render: { fillStyle: '#7777ff' }
+    };
+
+    //constraint에 대한 제약 설정을 만든다.
+    const constraintOptions ={
+      stiffness: 0.06,
+      render: {
+        type: 'line',
+        anchors: false,
+        //제약선의 색상을 지정한다. 빨간색으로 지정했다.
+        strokeStyle: 'red'
+      }
+    };
+
+    //Composite의 stack기능을 이용해서 2차원 배열의 Bodies를 생성한다.
+    const cloth = Composites.stack(xx, yy, columns, rows, columnGap, rowGap, (x:number, y:number) => {
+      return Bodies.circle(x, y, particleRadius, particleOptions);
+    });
+
+    //천 기능을 만드는 함수이다.
+    //2차원 배열 객체를 넣고, 열(columns), 행(rows), 제약 대각선 설정(crossBrace), 제약조건(constraintOptions)를 넣는다.
+    Composites.mesh(cloth, columns, rows, crossBrace, constraintOptions);
+
+    // 윗줄 고정
+    for (let i = 0; i < columns; i++) {
+      cloth.bodies[i].isStatic = true;
+    }
+
+    Composite.add(world, [
+      cloth,
+      Bodies.circle(300, 500, 80, { isStatic: true, render: { fillStyle: '#060a19' } }),
+      Bodies.rectangle(500, 480, 80, 80, { isStatic: true, render: { fillStyle: '#060a19' } }),
+      Bodies.rectangle(400, 609, 800, 50, { isStatic: true })
+    ]);
+    
+
+    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //Wrapping 플러그인 생성 함수
     //물체가 오른쪽 화면 끝으로 나가면 왼쪽에서 다시 나타나도록 한다.
@@ -125,59 +186,7 @@ const Collision: React.FC = () => {
     //마우스 제약 조건을 월드에 추가해 마우스 기능을 사용할 수 있도록 한다.
     Composite.add(world, mouseConstraint);
 
-
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
-
-    // 색상 A,B String 생성
-    var colorA:string = '#f55a3c',
-        colorB:string = '#f5d259';
-
-    // 충돌을 감지하는 colldier 사각형 생성
-    var collider = Bodies.rectangle(400, 300, 350, 40, {
-        isStatic: false,
-        chamfer:{radius:15},
-        //mass:관성에 대한 저항을 추가한다.
-        mass:1,
-        render: {
-            fillStyle: 'green',
-            lineWidth: 2,
-            strokeStyle:"black"
-        },
-    });
-
-
-    //setAngularVelocity는 지속적인 회전을 추가해준다.
-    Events.on(engine, 'beforeUpdate', () => {
-      Body.setAngularVelocity(collider, 0.02); // 지속적인 회전 추가.
-    });
-
-
-
-
-    // 렌더링 시작하자마자 원 생성.
-    Composite.add(world,
-        [Bodies.circle(400, 40, 20, {
-            restitution:0.7
-            ,
-            render: {
-                fillStyle: colorB,
-                lineWidth: 2,
-                strokeStyle:"black"
-            }
-        }),
-        
-      //Constraint.create//
-      //collider의 가운데에 스프링을 연결해준다.
-      Constraint.create({
-        pointA: {x:400,y:400},
-        bodyB:collider,
-        stiffness:1,
-        length:0,
-      })]
-    );
-
     Composite.add(world, [
-        collider,
         Bodies.rectangle(400, 600, 800, 50, { 
             isStatic: true,
             render: {
@@ -187,49 +196,6 @@ const Collision: React.FC = () => {
         })
     ]);
 
-
-    Events.on(mouseConstraint,'mousedown', function(event){
-      const position = event.mouse.position;
-
-      Composite.add(world,
-        Bodies.circle(position.x, position.y, Math.floor(Matter.Common.random(4,10)*2), {
-            restitution:Matter.Common.random(0.1,0.4),
-            frictionAir:Matter.Common.random(0.01,0.03)
-            ,
-            render: {
-                fillStyle: colorB,
-                lineWidth: 2,
-                strokeStyle:"black"
-            }
-        })
-      )
-      //다시 Wrapping
-      Wrapping();
-    })
-
-    //충돌을 확인하는 Events 기능 추가
-    Events.on(engine, 'collisionStart', function(event) {
-        //충돌이 감지된 객체를 모두 가져온다.
-        var pairs = event.pairs;
-        
-        //충돌이 감지된 객체를 모두 순회하면서 collider 객체와 충돌했는지 확인한다.
-        for (var i = 0, j = pairs.length; i != j; ++i) {
-            var pair = pairs[i];
-            //충돌이 된 body는 bodyA, bodyB로 구성된다.
-            //bodyA가 collider이거나 bodyB가 collider될 수 있기 때문에 2가지 조건을 생성한다.
-            if (pair.bodyA === collider) {
-                //충돌이 된 Circle의 색상을 바꾼다.
-                pair.bodyB.render.fillStyle = colorA;
-            } else if (pair.bodyB === collider) {
-              //충돌이 된 Circle의 색상을 바꾼다.
-                pair.bodyA.render.fillStyle = colorA;
-            }
-        }
-    });
-
-
-
-    //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■//
 
     //Engine.run//
     // 물리 계산을 시작한다.
@@ -258,4 +224,4 @@ const Collision: React.FC = () => {
   return <div ref={sceneRef} />;
 };
 
-export default Collision;
+export default Cloth;

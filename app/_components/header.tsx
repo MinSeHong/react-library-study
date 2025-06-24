@@ -17,19 +17,17 @@ export default function Header() {
       </div>
 
       <div className={styles.localNavigation}>
-        <nav>React-Redux</nav>
-        <Link href="/react-redux/counter">
-          <nav className={styles.subNavigation}>Counter</nav>
-        </Link>
-      </div>
-
-      <div className={styles.localNavigation}>
-        <nav>React-Query</nav>
+        <nav>React State</nav>
+        <nav className={styles.subNavigation}>React-Query</nav>
         <Link href="/react-query/get">
           <nav className={styles.subNavigation}>Get</nav>
         </Link>
         <Link href="/react-query/post">
           <nav className={styles.subNavigation}>Post</nav>
+        </Link>
+          <nav className={styles.subNavigation}>React-Redux</nav>
+        <Link href="/react-redux/counter">
+          <nav className={styles.subNavigation}>Counter</nav>
         </Link>
       </div>
 
@@ -64,12 +62,26 @@ export default function Header() {
         <Link href="/matter/bodies/compound">
           <nav className={styles.subNavigation}>Compound</nav>
         </Link>
+        <Link href="/matter/bodies/collision">
+          <nav className={styles.subNavigation}>Collision</nav>
+        </Link>
+        <Link href="/matter/bodies/cloth">
+          <nav className={styles.subNavigation}>softBody</nav>
+        </Link>
+      </div>
+
+      <div className={styles.localNavigation}>
+        <nav>Animation</nav>
+        <Link href="/animation">
+          <nav className={styles.subNavigation}>EggFry</nav>
+        </Link>
       </div>
 
       <div className={styles.localNavigation}>
         <Link href="/three">
           <nav>Three.js</nav>
         </Link>
+        
       </div>
     </header>
   );
